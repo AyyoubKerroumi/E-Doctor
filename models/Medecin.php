@@ -1,6 +1,6 @@
 <?php
 
-    class Secretaire {
+    class Medecin {
         private $email;
         private $password;
         private $name;
@@ -25,7 +25,7 @@
 
     }
 
-    class SecretaireManager {
+    class MedecinManager {
 
         private $conn;
 

@@ -6,10 +6,9 @@
         private $cin;
         private $name;
 
-        function __construct($email,$password,$username,$cin,$name) {
+        function __construct($email,$password,$cin,$name) {
             $this->email = $email;
             $this->password = $password;
-            $this->username = $username;
             $this->cin = $cin;
             $this->name = $name;
         }
@@ -20,10 +19,6 @@
 
         function getPassword() {
             return $this->password;
-        }
-
-        function getUsername() {
-            return $this->username;
         }
 
         function getCin() {

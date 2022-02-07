@@ -71,7 +71,6 @@
         function UpdateRendezVous($rendezVous,$Rid) {
             $upd = "UPDATE RendezVous SET Pid=:Pid,jour=:jour,M_S=:M_S,ordre=:ordre WHERE Rid=:Rid";
             $stmu = $this->conn->prepare($upd);
-            $stmu->bindValue("Pid",$rendezVous->getPid(),PDO::PARAM_INT);
             $stmu->bindValue("jour",$rendezVous->getJour(),PDO::PARAM_STR);
             $stmu->bindValue("M_S",$rendezVous->getM_S(),PDO::PARAM_STR);
             $stmu->bindValue("ordre",$rendezVous->getEmail(),PDO::PARAM_INT);
@@ -99,7 +98,7 @@
         }
 
         function getRDVAndPAtientsByDay($day){
-            $sql = "SELECT name,cin,email,M_S,ordre from patient 
+            $sql = "SELECT Rid,name,cin,email,M_S,ordre from patient 
             NATURAL JOIN rendezvous
             WHERE DATE(jour) = ?";
             $stms = $this->conn->prepare($sql);
