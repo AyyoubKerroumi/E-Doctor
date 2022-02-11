@@ -1,9 +1,8 @@
 <?php
 
-include_once '../../config/database.php';
-require "../../vendor/autoload.php";
-require_once "../../models/Patient.php";
-require_once "../../models/RendezVous.php";
+include_once '../config/database.php';
+require "../vendor/autoload.php";
+require_once "../models/Patient.php";
 use \Firebase\JWT\JWT;
 
 header('Access-Control-Allow-Origin: *');
@@ -36,31 +35,32 @@ if(isset($headers['Authorization'])){
     if($jwt){
         try{
             $decoded = JWT::decode($jwt, $secret_key, array('HS256'));
+            $PatientManager = new PatientManager($conn);
             $data = json_decode(file_get_contents("php://input"));
-            $Rid = $data->Rid;
-            $jour = $data->jour;
-            $M_S = $data->M_S;
-            $ordre = $data->ordre;
-            $Rdv = new RendezVous('',$jour,$M_S,$ordre);
-            $rdvMan = new RendezVousManager($conn);
-            $rdvMan->UpdateRendezVous($Rdv,$Rid);
-            http_response_code(200);
-            echo json_encode(
-                array(
-                        "message" => "RDV Modifié avec sccués.",
+            $cin = $data->cin;
+           if($row = $PatientManager->getPatientByCin($cin))
+            {
+                echo json_encode(array(
+                "Pid" => $row['Pid'],
+                "name" => $row['Name'],
+                "email" => $row['email'],
+                "cin" => $row['CIN'],
+            ));
+            }else{
+                echo json_encode(array());
+            }
+            }catch(Exception $e){
+                http_response_code(401);
+                echo json_encode(array(
+                    "message" => "Access denied.",
+                    "error" => $e->getMessage()
                 ));
-        }catch(Exception $e) {
-            http_response_code(401);
-            echo json_encode(array(
-                "message" => "Access denied.",
-                "error" => $e->getMessage(),
-            ));
-        }
-    }else {
-        http_response_code(401);
-            echo json_encode(array(
-                "message" => "Access denied.",
-                "error" => "No token sent",
-            ));
+            }
     }
+}else{
+    http_response_code(401);
+            echo json_encode(array(
+                "message" => "Access denied.",
+                "error" => "No token sent"
+            ));
 }

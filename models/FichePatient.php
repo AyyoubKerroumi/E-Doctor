@@ -21,6 +21,9 @@ class FichePatient{
         $this->adresse = $adresse;
     }
 
+    function getPid() {
+        return $this->Pid;
+    }
 
     function getDateNaissance(){
         return $this->dateNaissance;
@@ -63,13 +66,13 @@ class FicheManager{
          $sql = "UPDATE fichepatient SET dateNaissance = :dateNaissance,tlfn = :tlfn,poids = :poids, assurance = :assurance,grpSanguin = :grpSanguin,
                                         sexe = :sexe,adresse = :adresse";
         $stmu = $this->conn->prepare($sql);
-        $stmu->bindValue("dateNaissance",$fiche->dateNaissance,PDO::PARAM_STR);
-        $stmu->bindValue("tlfn",$fiche->tlfn,PDO::PARAM_STR);
-        $stmu->bindValue("poids",$fiche->poids,PDO::PARAM_INT);
-        $stmu->bindValue("assurance",$fiche->assurance,PDO::PARAM_STR);
-        $stmu->bindValue("grpSanguin",$fiche->grpSanguin,PDO::PARAM_STR);
-        $stmu->bindValue("sexe",$fiche->sexe,PDO::PARAM_STR);
-        $stmu->bindValue("adresse",$fiche->adresse,PDO::PARAM_STR);
+        $stmu->bindValue("dateNaissance",$fiche->getDateNaissance(),PDO::PARAM_STR);
+        $stmu->bindValue("tlfn",$fiche->getTlfn(),PDO::PARAM_STR);
+        $stmu->bindValue("poids",$fiche->getPoids(),PDO::PARAM_INT);
+        $stmu->bindValue("assurance",$fiche->getAssurance(),PDO::PARAM_STR);
+        $stmu->bindValue("grpSanguin",$fiche->getGrpSanguin(),PDO::PARAM_STR);
+        $stmu->bindValue("sexe",$fiche->getSexe(),PDO::PARAM_STR);
+        $stmu->bindValue("adresse",$fiche->getAdresse(),PDO::PARAM_STR);
         $stmu->execute();
     }
 
@@ -103,17 +106,16 @@ class FicheManager{
     }
 
     function addFichePatient($fiche){
-        $ins = "INSERT INTO fichepatient VALUES(NULL,:Pid,:dateNaissance,:tlfn,:poids,:poids,:assurance,:grpSanguin,:sexe,:adresse) ";
+        $ins = "INSERT INTO fichepatient VALUES(NULL,:Pid,:dateNaissance,:tlfn,:poids,:assurance,:grpSanguin,:sexe,:adresse) ";
         $stmu = $this->conn->prepare($ins);
-        $stmu->bindValue("Pid",$fiche->dateNaissance,PDO::PARAM_INT);
-        $stmu->bindValue("dateNaissance",$fiche->dateNaissance,PDO::PARAM_STR);
-        $stmu->bindValue("tlfn",$fiche->tlfn,PDO::PARAM_STR);
-        $stmu->bindValue("poids",$fiche->poids,PDO::PARAM_INT);
-        $stmu->bindValue("assurance",$fiche->assurance,PDO::PARAM_STR);
-        $stmu->bindValue("grpSanguin",$fiche->grpSanguin,PDO::PARAM_STR);
-        $stmu->bindValue("sexe",$fiche->sexe,PDO::PARAM_STR);
-        $stmu->bindValue("adresse",$fiche->adresse,PDO::PARAM_STR);
-        $stmu->execute();
+        $stmu->bindValue("Pid",$fiche->getPid(),PDO::PARAM_INT);
+        $stmu->bindValue("dateNaissance",$fiche->getDateNaissance(),PDO::PARAM_STR);
+        $stmu->bindValue("tlfn",$fiche->getTlfn(),PDO::PARAM_STR);
+        $stmu->bindValue("poids",$fiche->getPoids(),PDO::PARAM_INT);
+        $stmu->bindValue("assurance",$fiche->getAssurance(),PDO::PARAM_STR);
+        $stmu->bindValue("grpSanguin",$fiche->getGrpSanguin(),PDO::PARAM_STR);
+        $stmu->bindValue("sexe",$fiche->getSexe(),PDO::PARAM_STR);
+        $stmu->bindValue("adresse",$fiche->getAdresse(),PDO::PARAM_STR);
         return $stmu->execute();
     }
 }

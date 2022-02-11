@@ -69,14 +69,13 @@
         }
 
         function UpdateRendezVous($rendezVous,$Rid) {
-            $upd = "UPDATE RendezVous SET Pid=:Pid,jour=:jour,M_S=:M_S,ordre=:ordre WHERE Rid=:Rid";
+            $upd = "UPDATE RendezVous SET jour=:jour,M_S=:M_S,ordre=:ordre WHERE Rid=:Rid";
             $stmu = $this->conn->prepare($upd);
             $stmu->bindValue("jour",$rendezVous->getJour(),PDO::PARAM_STR);
             $stmu->bindValue("M_S",$rendezVous->getM_S(),PDO::PARAM_STR);
-            $stmu->bindValue("ordre",$rendezVous->getEmail(),PDO::PARAM_INT);
+            $stmu->bindValue("ordre",$rendezVous->getOrdre(),PDO::PARAM_INT);
             $stmu->bindValue("Rid",$Rid,PDO::PARAM_INT);
             return $stmu->execute();
-    
         }
 
         function DelRendezVous($Rid) {
