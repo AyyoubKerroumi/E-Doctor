@@ -2,7 +2,7 @@
 
 include_once '../../config/database.php';
 require "../../vendor/autoload.php";
-require_once "../../models/fichePatient.php";
+require_once "../../models/FichePatient.php";
 use \Firebase\JWT\JWT;
 
 header('Access-Control-Allow-Origin: *');
@@ -36,24 +36,18 @@ if(isset($headers['Authorization'])){
         try{
             $decoded = JWT::decode($jwt, $secret_key, array('HS256'));
             $data = json_decode(file_get_contents("php://input"));
-
-            $Pid = $data->Pid;
-            $dateNaissance = $data->dateNaissance;
-            $tlfn = $data->tlfn;
-            $poids = $data->poids;
-            $assurance = $data->assurance;
-            $grpSanguin = $data->grpSanguin;
-            $sexe = $data->sexe;
-            $adresse = $data->adresse;
-            $fiche = new FichePatient($Pid,$dateNaissance,$tlfn,$poids,$assurance,$grpSanguin,$sexe,$adresse);
             $ficheMan = new FicheManager($conn);
-            if($ficheMan->updateFichePatient($fiche))
-            {
-                http_response_code(200);
-                echo json_encode(
-                    array(
-                        "message" => "Modifié avec sccués.",
-                    ));
+            $Pid = $data->Pid;
+            if($row = $ficheMan->getFichePatientByPid($Pid)){
+                echo json_encode(array(
+                    "dateNaissance"=>$row["dateNaissance"],
+                    "tlfn" => $row["tlfn"],
+                    "poids" => $row["poids"],
+                    "assurance" => $row["assurance"],
+                    "grpSanguin" => $row["grpSanguin"],
+                    "sexe" => $row["sexe"],
+                    "adresse" => $row["adresse"],
+                ));
             }
         }catch(Exception $e){
             http_response_code(401);
@@ -65,8 +59,12 @@ if(isset($headers['Authorization'])){
     }
 }else{
     http_response_code(401);
-        echo json_encode(array(
-            "message" => "Access denied.",
-            "error" => $e->getMessage()
-        ));
+            echo json_encode(array(
+                "message" => "Access denied.",
+                "error" => "No token sent"
+            ));
 }
+
+
+
+

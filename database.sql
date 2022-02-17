@@ -78,3 +78,15 @@ CREATE TABLE Secretaire (
     password VARCHAR(50) NOT NULL
 )
 >>>>>>> db625169567067763e21144e9c9f121f54d646af
+
+CREATE TABLE Consultation (
+    Cid INT PRIMARY KEY AUTO_INCREMENT,
+    Pid INT,
+    DateConsultation DATE NOT NULL,
+    Motif Text,
+    Diagnostic Text ,
+    ExamenClinique Text,
+    ExamenLabo Text,
+    Prescription Text,
+    FOREIGN KEY (Pid) REFERENCES Patient(Pid) ON DELETE CASCADE
+);

@@ -64,7 +64,7 @@ class FicheManager{
 
     function updateFichePatient($fiche){
          $sql = "UPDATE fichepatient SET dateNaissance = :dateNaissance,tlfn = :tlfn,poids = :poids, assurance = :assurance,grpSanguin = :grpSanguin,
-                                        sexe = :sexe,adresse = :adresse";
+                                        sexe = :sexe,adresse = :adresse WHERE Pid = :Pid";
         $stmu = $this->conn->prepare($sql);
         $stmu->bindValue("dateNaissance",$fiche->getDateNaissance(),PDO::PARAM_STR);
         $stmu->bindValue("tlfn",$fiche->getTlfn(),PDO::PARAM_STR);
@@ -73,7 +73,8 @@ class FicheManager{
         $stmu->bindValue("grpSanguin",$fiche->getGrpSanguin(),PDO::PARAM_STR);
         $stmu->bindValue("sexe",$fiche->getSexe(),PDO::PARAM_STR);
         $stmu->bindValue("adresse",$fiche->getAdresse(),PDO::PARAM_STR);
-        $stmu->execute();
+        $stmu->bindValue("Pid",$fiche->getPid(),PDO::PARAM_INT);
+        return $stmu->execute();
     }
 
     function getFichePatientById($id) {
@@ -92,7 +93,8 @@ class FicheManager{
         $stms = $this->conn->prepare($sql);
         $stms->bindValue("Pid",$Pid,PDO::PARAM_INT);
         $stms->execute();
-        return $stms;
+        $fiche = $stms->fetch(PDO::FETCH_ASSOC);
+        return $fiche;
     }
 
     function getFichePatientByCin($cin){

@@ -2,7 +2,7 @@
 
 include_once '../../config/database.php';
 require "../../vendor/autoload.php";
-require_once "../../models/fichePatient.php";
+require_once "../../models/Consultation.php";
 use \Firebase\JWT\JWT;
 
 header('Access-Control-Allow-Origin: *');
@@ -38,21 +38,20 @@ if(isset($headers['Authorization'])){
             $data = json_decode(file_get_contents("php://input"));
 
             $Pid = $data->Pid;
-            $dateNaissance = $data->dateNaissance;
-            $tlfn = $data->tlfn;
-            $poids = $data->poids;
-            $assurance = $data->assurance;
-            $grpSanguin = $data->grpSanguin;
-            $sexe = $data->sexe;
-            $adresse = $data->adresse;
-            $fiche = new FichePatient($Pid,$dateNaissance,$tlfn,$poids,$assurance,$grpSanguin,$sexe,$adresse);
-            $ficheMan = new FicheManager($conn);
-            if($ficheMan->updateFichePatient($fiche))
+            $DateConsultation = $data->DateConsultation;
+            $Motif = $data->Motif;
+            $Diagnostic = $data->Diagnostic;
+            $ExamenClinique = $data->ExamenClinique;
+            $ExamenLabo = $data->ExamenLabo;
+            $Prescription = $data->Prescription;
+            $consult = new Consultation("",$Pid,$DateConsultation,$Diagnostic,$Motif,$ExamenClinique,$ExamenLabo,$Prescription);
+            $consMan = new ConsultationMAnager($conn);
+            if($consMan->addConsultation($consult))
             {
                 http_response_code(200);
                 echo json_encode(
                     array(
-                        "message" => "Modifié avec sccués.",
+                        "message" => "Ajouté avec sccués.",
                     ));
             }
         }catch(Exception $e){
@@ -67,6 +66,5 @@ if(isset($headers['Authorization'])){
     http_response_code(401);
         echo json_encode(array(
             "message" => "Access denied.",
-            "error" => $e->getMessage()
         ));
 }
